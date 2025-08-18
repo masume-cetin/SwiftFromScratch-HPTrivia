@@ -15,8 +15,10 @@ struct GamePlay: View {
     @State private var revealHint :Bool = false
     @State private var revealBook :Bool = false
     @State private var tappedCorrectAnswer :Bool = false
+    @State private var wrongAnswersTapped :[String] = []
     @Environment(Game.self) private var game
     @Environment(\.dismiss) private var dismiss
+    @Namespace private var nameSpace
     var body: some View {
         GeometryReader { geo in
             ZStack {
@@ -143,9 +145,11 @@ struct GamePlay: View {
                             answer in
                             if answer == game.currentQuestion.answer {
                                 VStack{
-                                if animateViewsIn {
+                                if animateViewsIn  && !tappedCorrectAnswer {
                                     Button{
-                                        tappedCorrectAnswer = true
+                                        withAnimation(.easeOut(duration:1)) {
+                                            tappedCorrectAnswer = true
+                                        }
                                         playCorrectSound()
                                         game.correct()
                                     }
@@ -157,8 +161,9 @@ struct GamePlay: View {
                                             .frame(width: geo.size.width/2.15, height: 80)
                                             .background(.green.opacity(0.5))
                                             .clipShape(.rect(cornerRadius: 25))
+                                            .matchedGeometryEffect(id: 1, in: nameSpace)
                                         
-                                    }.transition(.scale)
+                                    }.transition(.asymmetric(insertion: .scale, removal: .scale(scale: 15).combined(with: .opacity)))
                                 }
                                 }.animation(.easeOut(duration: 1).delay(1.5),value: animateViewsIn)
                             }
@@ -166,6 +171,10 @@ struct GamePlay: View {
                                 VStack{
                                 if animateViewsIn {
                                     Button{
+                                        withAnimation (.easeOut(duration: 1)){
+                                            
+                                            wrongAnswersTapped.append(answer)
+                                        }
                                         playWrongSound()
                                         game.questionScore -= 1
                                     }
@@ -175,10 +184,13 @@ struct GamePlay: View {
                                             .multilineTextAlignment(.center)
                                             .padding(10)
                                             .frame(width: geo.size.width/2.15, height: 80)
-                                            .background(.green.opacity(0.5))
+                                            .background(wrongAnswersTapped.contains(answer) ? .red.opacity(0.5) :.green.opacity(0.5))
                                             .clipShape(.rect(cornerRadius: 25))
+                                            .scaleEffect(wrongAnswersTapped.contains(answer) ? 0.8 : 1)
                                         
                                     }.transition(.scale)
+                                        .sensoryFeedback(.error, trigger: wrongAnswersTapped)
+                                        .disabled(wrongAnswersTapped.contains(answer))
                                 }
                                 }.animation(.easeOut(duration: 1).delay(1.5),value: animateViewsIn)
                             }
@@ -192,6 +204,19 @@ struct GamePlay: View {
                 .frame(width: geo.size.width,height: geo.size.height)
                 .foregroundStyle(.white)
                 // MARK: celebration
+                VStack{
+                    if tappedCorrectAnswer{
+                        Text(game.currentQuestion.answer)
+                            .minimumScaleFactor(0.5)
+                            .multilineTextAlignment(.center)
+                            .padding(10)
+                            .frame(width: geo.size.width/2.15, height: 80)
+                            .background(.green.opacity(0.5))
+                            .clipShape(.rect(cornerRadius: 25))
+                            .scaleEffect(2)
+                            .matchedGeometryEffect(id: 1, in: nameSpace)
+                    }
+                }
             }
             .frame(width: geo.size.width,height: geo.size.height)
         }
