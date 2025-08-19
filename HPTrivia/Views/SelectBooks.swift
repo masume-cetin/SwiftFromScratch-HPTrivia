@@ -11,6 +11,7 @@ struct SelectBooks: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(Game.self) private var game
     @State private var showTempAlert = false
+    private var store = Store()
     var activeBooks : Bool {
         for book in game.bookQuestions.books{
             if(book.status == .active){
@@ -75,6 +76,9 @@ struct SelectBooks: View {
         .interactiveDismissDisabled(!activeBooks)
         .alert("You purchased a new question pack. Yay !", isPresented: $showTempAlert) {
             
+        }
+        .task {
+            await store.loadProducts()
         }
     }
 }
