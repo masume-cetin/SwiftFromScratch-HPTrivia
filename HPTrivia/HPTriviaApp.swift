@@ -29,5 +29,5 @@ App development plan
  - store
  - instruction screen ✔️
  - books ✍︎
- - persist scores ✍︎
+ - persist scores ✔️
 */
