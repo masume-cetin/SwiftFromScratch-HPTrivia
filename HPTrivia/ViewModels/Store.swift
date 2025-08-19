@@ -27,7 +27,35 @@ class Store {
         }
     }
     // purchase a product
-    
+    func purchase (_ product: Product) async{
+        do{
+            let result = try await product.purchase()
+            
+            switch result {
+            case .success(let verificationResult):
+                // purchase succesfull but now we need to verify receipt and transaction
+                switch verificationResult {
+                case .unverified(let signedType, let verificationError):
+                    print("error on \(signedType) : \(verificationError)")
+                case .verified(let signedType):
+                    purchased.insert(signedType.productID)
+                    
+                    await signedType.finish()
+                }
+            case .userCancelled:
+                // user canceled or parent disapproved child's purchase request
+                break
+            case .pending:
+                // waiting for some sort of approval
+                break
+           @unknown default :
+                break
+            }
+        }
+        catch{
+            print("Unable to purchase product \(error)")
+        }
+    }
     // check for purchased products
     
     // connect with app store to watch for purchase and transaction updates
