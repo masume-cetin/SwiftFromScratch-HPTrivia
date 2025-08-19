@@ -67,6 +67,7 @@ struct SelectBooks: View {
                         .multilineTextAlignment(.center)
                 }
                 Button("Done"){
+                    game.bookQuestions.saveStatus()
                     dismiss()
                 }
                 .font(.largeTitle)
@@ -78,7 +79,7 @@ struct SelectBooks: View {
             }
             .foregroundStyle(.black)
         }
-        .interactiveDismissDisabled(!activeBooks)
+        .interactiveDismissDisabled()
         .task {
             await store.loadProducts()
         }

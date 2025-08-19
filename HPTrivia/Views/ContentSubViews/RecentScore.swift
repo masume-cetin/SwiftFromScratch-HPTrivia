@@ -9,16 +9,16 @@ import SwiftUI
 
 struct RecentScore: View {
     @Binding var animateViewsIn: Bool
+    @Environment(Game.self) private var game
     var body: some View {
         VStack{
             if animateViewsIn {
                 VStack{
                     Text("Recent Scores")
                         .font(.title2)
-                    Text("33")
-                    Text("23")
-                    Text("13")
-                    
+                    ForEach(game.recentScores,id:\.self){score in
+                        Text("\(score)")
+                    }
                 }
                 .font(.title3)
                 .foregroundStyle(.white)
@@ -33,4 +33,5 @@ struct RecentScore: View {
 
 #Preview {
     RecentScore(animateViewsIn: .constant(true))
+        .environment(Game())
 }

@@ -25,9 +25,9 @@ App development plan
  - celebration ✔️
  - audio ✔️
  - animations ✔️
- - in app purchases
- - store
+ - in app purchases✔️
+ - store✔️
  - instruction screen ✔️
- - books ✍︎
+ - books ✔️
  - persist scores ✔️
 */

@@ -299,7 +299,7 @@ struct GamePlay: View {
         musicPlayer = try! AVAudioPlayer(contentsOf:URL(filePath: sound!))
         musicPlayer.numberOfLoops = -1
         musicPlayer.volume = 0.1
-       // musicPlayer.play()
+        musicPlayer.play()
     }
     private func playFlipSound() {
         let sound = Bundle.main.path(forResource:"page-flip",ofType:"mp3")

@@ -5,7 +5,7 @@
 //  Created by masume çetin on 17.08.2025.
 //
 
-struct Book : Identifiable {
+struct Book : Identifiable, Codable{
     let id : Int
     let image : String
     let questions : [Question]
@@ -13,6 +13,6 @@ struct Book : Identifiable {
 
 }
 
-enum BookStatus : String {
+enum BookStatus : Codable {
     case active,inactive,locked
 }
